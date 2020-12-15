@@ -146,8 +146,8 @@ class Model(nn.Module):
         self.encoder = Encoder(hp.embedding_size, hp.hidden_size)
         self.decoder = MelDecoder(hp.hidden_size)
 
-    def forward(self, mel_input, pos_mel):
-        memory, c_mask, attns_enc = self.encoder.forward(mel_input, pos=pos_mel)
+    def forward(self, mel, mel_input, pos_mel):
+        memory, c_mask, attns_enc = self.encoder.forward(mel, pos=pos_mel)
         mel_output, postnet_output, attn_probs, stop_preds, attns_dec = self.decoder.forward(memory, mel_input, c_mask,
                                                                                              pos=pos_mel)
 
