@@ -25,12 +25,12 @@ def synthesis(text, args):
     m.load_state_dict(load_checkpoint(args.restore_step1, "transformer"))
     m_post.load_state_dict(load_checkpoint(args.restore_step2, "postnet"))
 
-    text = np.asarray(text_to_sequence(text, [hp.cleaners]))
-    text = t.LongTensor(text).unsqueeze(0)
-    text = text.cuda()
+    #text = np.asarray(text_to_sequence(text, [hp.cleaners]))
+    #text = t.LongTensor(text).unsqueeze(0)
+    #text = text.cuda()
     mel_input = t.zeros([1,1, 80]).cuda()
-    pos_text = t.arange(1, text.size(1)+1).unsqueeze(0)
-    pos_text = pos_text.cuda()
+    #pos_text = t.arange(1, text.size(1)+1).unsqueeze(0)
+    #pos_text = pos_text.cuda()
 
     m=m.cuda()
     m_post = m_post.cuda()
@@ -41,7 +41,7 @@ def synthesis(text, args):
     with t.no_grad():
         for i in pbar:
             pos_mel = t.arange(1,mel_input.size(1)+1).unsqueeze(0).cuda()
-            mel_pred, postnet_pred, attn, stop_token, _, attn_dec = m.forward(text, mel_input, pos_text, pos_mel)
+            mel_pred, postnet_pred, attn, stop_token, _, attn_dec = m.forward(mel, mel_input, pos_mel)
             mel_input = t.cat([mel_input, postnet_pred[:,-1:,:]], dim=1)
 
         mag_pred = m_post.forward(postnet_pred)
