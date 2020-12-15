@@ -139,10 +139,10 @@ def get_param_size(model):
     return params
 
 def get_dataset():
-    return LJDatasets(os.path.join(hp.data_path,'metadata.csv'), os.path.join(hp.data_path,'wavs'))
+    return LJDatasets(os.path.join(hp.data_path,'metadata.csv'), os.path.join(hp.data_path))
 
 def get_post_dataset():
-    return PostDatasets(os.path.join(hp.data_path,'metadata.csv'), os.path.join(hp.data_path,'wavs'))
+    return PostDatasets(os.path.join(hp.data_path,'metadata.csv'), os.path.join(hp.data_path))
 
 def _pad_mel(inputs):
     _pad = 0
