@@ -34,17 +34,18 @@ def main():
             if global_step < 400000:
                 adjust_learning_rate(optimizer, global_step)
                 
-            mel, mel_input, pos_mel, _ = data
+            mel, mel_input, pos_mel = data
             
             stop_tokens = t.abs(pos_mel.ne(0).type(t.float) - 1)
             
             #character = character.cuda()
             mel = mel.cuda()
             mel_input = mel_input.cuda()
+            #print(mel_input)
             #pos_text = pos_text.cuda()
             pos_mel = pos_mel.cuda()
             
-            mel_pred, postnet_pred, attn_probs, stop_preds, attns_enc, attns_dec = m.forward(mel_input, pos_mel)
+            mel_pred, postnet_pred, attn_probs, stop_preds, attns_enc, attns_dec = m.forward(mel, mel_input, pos_mel)
 
             mel_loss = nn.L1Loss()(mel_pred, mel)
             post_mel_loss = nn.L1Loss()(postnet_pred, mel)
