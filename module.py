@@ -70,9 +70,9 @@ class EncoderPrenet(nn.Module):
     """
     def __init__(self, embedding_size, num_hidden):
         super(EncoderPrenet, self).__init__()
-        self.embedding_size = embedding_size
-        #self.embed = nn.Embedding(mel, embedding_size, padding_idx=0)
-
+        #self.embedding_size = embedding_size
+        #self.embed = nn.Embedding(embedding_size, padding_idx=0)
+        self.embed = t.nn.Conv1d(in_channels=80, out_channels=256, kernel_size=1)
         self.conv1 = Conv(in_channels=embedding_size,
                           out_channels=num_hidden,
                           kernel_size=5,
@@ -100,8 +100,12 @@ class EncoderPrenet(nn.Module):
         self.projection = Linear(num_hidden, num_hidden)
 
     def forward(self, input_):
-        #input_ = self.embed(input_) 
-        input_ = input_.transpose(1, 2) 
+        #print(input_.shape)
+        #from numpy import moveaxis
+        #input_=moveaxis(input_,2,1)
+        #print(input_.shape)
+        input_ = input_.transpose(1, 2)
+        input_ = self.embed(input_) 
         input_ = self.dropout1(t.relu(self.batch_norm1(self.conv1(input_)))) 
         input_ = self.dropout2(t.relu(self.batch_norm2(self.conv2(input_)))) 
         input_ = self.dropout3(t.relu(self.batch_norm3(self.conv3(input_)))) 
