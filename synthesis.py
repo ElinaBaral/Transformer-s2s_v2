@@ -29,9 +29,11 @@ def synthesis(mel, args):
     #text = np.asarray(text_to_sequence(text, [hp.cleaners]))
     #text = t.LongTensor(text).unsqueeze(0)
     #text = text.cuda()
-    mel = mel[np.newaxis,:,:]
+    #mel = mel[np.newaxis,:,:]
     #mel=np.expand_dims(mel,3)
-    mel = t.FloatTensor(mel)#.unsqueeze(0)
+    #mel = t.FloatTensor(mel)#.unsqueeze(0)
+    #mel = mel.cuda()
+    mel = t.FloatTensor(mel).unsqueeze(0)
     mel = mel.cuda()
     #print(mel.size())
     #mel=t.from_numpy(mel[np.newaxis,:,:]).cuda()
@@ -50,6 +52,7 @@ def synthesis(mel, args):
     with t.no_grad():
         for i in pbar:
             pos_mel = t.arange(1,mel_input.size(1)+1).unsqueeze(0).cuda()
+            print("pos_mel in synthesis", pos_mel.shape)
             mel_pred, postnet_pred, attn, stop_token, _, attn_dec = m.forward(mel, mel_input, pos_mel)
             mel_input = t.cat([mel_input, postnet_pred[:,-1:,:]], dim=1)
 
